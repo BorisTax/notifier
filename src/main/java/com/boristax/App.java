@@ -19,7 +19,7 @@ public class App extends JFrame {
            boolean show=false;
            if((hours==10||hours==12||hours==14||hours==16)&&(minutes==50&&seconds==0)){ show=true;title="ALARMA";}
            if((hours==8||hours==12||hours==17)&&(minutes==55&&seconds==0)){show=true; title="WORK TIME";}
-           //if(seconds%15==0){show=true;title="HELLO";}
+           //if(seconds%10==0){show=true;title="HELLO";}
            if(!show) return;
            if(alert!=null) alert.dispose();
             alert=new Alert(title);
@@ -52,12 +52,18 @@ class Alert extends JFrame {
     public void alert(){
         setVisible(true);
         x=getLocation().x;
+        //x=0;
         final int width=(int)screen.getWidth();
-        timerMove=new Timer(1,new ActionListener(){
+        timerMove=new Timer(20,new ActionListener(){
+            private double a=thisFrame.getWidth()+50;
+            private double c=thisFrame.getWidth()+20;
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(x>=width-thisFrame.getWidth()-50){ 
+                    if(x>(thisFrame.getWidth()+20)) {a=a*0.8;c=c*1.5;}
+                int y=(int)(a*Math.sin(x)+c);
                 thisFrame.setLocation(x, thisFrame.getLocation().y);
+               // thisFrame.setLocation((int)screen.getWidth()-y, thisFrame.getLocation().y);
                  x-=50;
                  }else{timerMove.stop();}
         }});
