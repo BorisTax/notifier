@@ -59,7 +59,8 @@
           <configuration>
               <archive>
                   <manifest>
-                      <packageName>com.boristax App</packageName>
+                      <packageName>com.boristax.App</packageName>
+                      <mainClass>com.boristax.App</mainClass>
                   </manifest>
                   <manifestEntries>
                       <Created-By>boristax</Created-By>

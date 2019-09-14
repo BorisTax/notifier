@@ -15,14 +15,14 @@ public class App extends JFrame {
            int hours=ldt.getHour();
            int minutes=ldt.getMinute();
            int seconds=ldt.getSecond();
-           String title="";
+           String text="";
            boolean show=false;
-           if((hours==10||hours==12||hours==14||hours==16)&&(minutes==50&&seconds==0)){ show=true;title="ALARMA";}
-           if((hours==8||hours==12||hours==17)&&(minutes==55&&seconds==0)){show=true; title="WORK TIME";}
-           //if(seconds%10==0){show=true;title="HELLO";}
+           if((hours==10||hours==12||hours==14||hours==16)&&(minutes==50&&seconds==0)){ show=true;text="ALARMA";}
+           if((hours==8||hours==12||hours==13||hours==17)&&(minutes==55&&seconds==0)){show=true; text="WORK TIME";}
+           //if(seconds%10==0){show=true;text="HELLO";}
            if(!show) return;
            if(alert!=null) alert.dispose();
-            alert=new Alert(title);
+            alert=new Alert(text);
         },1000);
     }
 }
@@ -30,7 +30,6 @@ public class App extends JFrame {
 class Alert extends JFrame {
     JFrame thisFrame;
     private static final long serialVersionUID = 2L;
-    private int x;
     private Timer timerMove;
     private Dimension screen=Toolkit.getDefaultToolkit().getScreenSize();
     private String title;
@@ -38,11 +37,10 @@ class Alert extends JFrame {
         super("");
         this.title=title;
         thisFrame=this;
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
         setOpacity(0.8f);
         setAlwaysOnTop(true);
-        MyPanel contents = new MyPanel(this,title);
+        MyPanel contents = new MyPanel(this,this.title);
         setContentPane(contents);
         setSize(300, 200);
         setLocation((int)screen.getWidth(),(int)screen.getHeight()-getHeight()-50);
@@ -51,21 +49,26 @@ class Alert extends JFrame {
     }
     public void alert(){
         setVisible(true);
-        x=getLocation().x;
-        //x=0;
-        final int width=(int)screen.getWidth();
         timerMove=new Timer(20,new ActionListener(){
             private double a=thisFrame.getWidth()+50;
-            private double c=thisFrame.getWidth()+20;
+            private final double A=thisFrame.getWidth()+100;
+            private double a1=A;
+            private double c=0;
+            private double t=0;
+            private double k=1;
+            private double dt=0.1;
+            private double x0=0;
+            private boolean flag=false;
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(x>=width-thisFrame.getWidth()-50){ 
-                    if(x>(thisFrame.getWidth()+20)) {a=a*0.8;c=c*1.5;}
-                int y=(int)(a*Math.sin(x)+c);
-                thisFrame.setLocation(x, thisFrame.getLocation().y);
-               // thisFrame.setLocation((int)screen.getWidth()-y, thisFrame.getLocation().y);
-                 x-=50;
-                 }else{timerMove.stop();}
+                t=t+dt;
+                double x=a*Math.sin(t)+c;
+                if(x<x0) flag=true;
+                if(flag){k=k*0.8;c=A*0.8;a1=A*0.2;dt=dt+0.1;}
+                if(a<1){timerMove.stop();}
+                x0=x;
+                a=a1*k;
+                thisFrame.setLocation((int)(screen.getWidth()-x), thisFrame.getLocation().y);
         }});
         timerMove.setRepeats(true);
         setVisible(true);
@@ -138,6 +141,5 @@ class MyTimer extends java.util.TimerTask {
 
      public void run(){
        func.accept(null);
- 
      }
  }
